@@ -38,7 +38,7 @@ Executable EICAR:
   script:
     - docker pull $CONTAINER_TEST_IMAGE
     - docker run -d --name TEST $CONTAINER_TEST_IMAGE 
-    - | -
+    - |
       for i in `seq 60`
       do
           HEALTH=$(docker inspect -f "{{.State.Health.Status}}")
