@@ -41,7 +41,7 @@ Executable EICAR:
     - |
       for i in `seq 60`
       do
-          HEALTH=$(docker inspect -f "{{.State.Health.Status}}")
+          HEALTH=$(docker inspect -f "{{.State.Health.Status}}" TEST)
           if [ ${HEALTH} =! "healthy" ]
           then
               echo "Container Unhealthy"
