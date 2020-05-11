@@ -38,6 +38,17 @@ Executable EICAR:
   script:
     - docker pull $CONTAINER_TEST_IMAGE
     - docker run -d --name TEST $CONTAINER_TEST_IMAGE 
+    - | -
+      for i in `seq 60`
+      do
+          HEALTH=$(docker inspect -f "{{.State.Health.Status}}")
+          if [ ${HEALTH} =! "healthy" ]; then
+              echo "Container Unhealthy"
+              sleep 5
+          else
+              echo "Container Healthy"
+              break
+      done
     - docker exec TEST wget -O /tmp/eicar.com https://secure.eicar.org/eicar.com
     - docker exec TEST clamdscan /tmp/eicar.com || code=$?; if [ $code -eq 1 ]; then echo "Successfull Detection"; else exit $code; fi
   variables:
