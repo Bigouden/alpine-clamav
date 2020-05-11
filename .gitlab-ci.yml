@@ -39,7 +39,7 @@ Operation:
     - docker pull $CONTAINER_TEST_IMAGE
     - docker run -d --name TEST $CONTAINER_TEST_IMAGE 
     - sleep 60
-    - docker exec TEST echo "PING" | nc 127.0.0.1 3310
+    - docker exec TEST bash -c "echo 'PING' | nc 127.0.0.1 3310"
   variables:
     GIT_STRATEGY: none
 
