@@ -21,4 +21,5 @@ WORKDIR /etc/clamav/
 EXPOSE 3310/tcp
 USER clamav
 HEALTHCHECK CMD /healthcheck.sh
+VOLUME ["/var/lib/clamav"]
 ENTRYPOINT ["/entrypoint.sh"]

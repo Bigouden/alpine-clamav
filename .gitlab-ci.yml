@@ -31,7 +31,7 @@ Build:
     - docker build --pull -t $CONTAINER_TEST_IMAGE .
     - docker push $CONTAINER_TEST_IMAGE
 
-Executable EICAR:
+EXE Virus:
   stage: Test
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
@@ -51,10 +51,63 @@ Executable EICAR:
               break
           fi
       done
-    - docker exec TEST wget -O /tmp/eicar.com https://secure.eicar.org/eicar.com
-    - docker exec TEST clamdscan /tmp/eicar.com || code=$?; if [ $code -eq 1 ]; then echo "Successfull Detection"; else exit $code; fi
+    - docker exec TEST wget -O /tmp/eicar $EICAR_URL
+    - docker exec TEST clamdscan /tmp/eicar || code=$?; if [ $code -eq 1 ]; then echo "Detection OK"; else exit $code; fi
   variables:
     GIT_STRATEGY: none
+    EICAR_URL: https://secure.eicar.org/eicar.com
+
+TXT Virus:
+  stage: Test
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - docker pull $CONTAINER_TEST_IMAGE
+    - docker run -d --name TEST $CONTAINER_TEST_IMAGE 
+    - |
+      for i in `seq 60`
+      do
+          HEALTH=$(docker inspect -f "{{.State.Health.Status}}" TEST)
+          if [ ${HEALTH} != "healthy" ]
+          then
+              echo "Container Unhealthy"
+              sleep 5
+          else
+              echo "Container Healthy"
+              break
+          fi
+      done
+    - docker exec TEST wget -O /tmp/eicar $EICAR_URL
+    - docker exec TEST clamdscan /tmp/eicar || code=$?; if [ $code -eq 1 ]; then echo "Detection OK"; else exit $code; fi
+  variables:
+    GIT_STRATEGY: none
+    EICAR_URL: https://secure.eicar.org/eicar.com.txt
+
+ZIP Virus:
+  stage: Test
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - docker pull $CONTAINER_TEST_IMAGE
+    - docker run -d --name TEST $CONTAINER_TEST_IMAGE 
+    - |
+      for i in `seq 60`
+      do
+          HEALTH=$(docker inspect -f "{{.State.Health.Status}}" TEST)
+          if [ ${HEALTH} != "healthy" ]
+          then
+              echo "Container Unhealthy"
+              sleep 5
+          else
+              echo "Container Healthy"
+              break
+          fi
+      done
+    - docker exec TEST wget -O /tmp/eicar $EICAR_URL
+    - docker exec TEST clamdscan /tmp/eicar || code=$?; if [ $code -eq 1 ]; then echo "Detection OK"; else exit $code; fi
+  variables:
+    GIT_STRATEGY: none
+    EICAR_URL: https://secure.eicar.org/eicar_com.zip
 
 Release:
   stage: Release
