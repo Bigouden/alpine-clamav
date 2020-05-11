@@ -31,15 +31,15 @@ Build:
     - docker build --pull -t $CONTAINER_TEST_IMAGE .
     - docker push $CONTAINER_TEST_IMAGE
 
-Operation:
+Executable EICAR:
   stage: Test
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
     - docker pull $CONTAINER_TEST_IMAGE
     - docker run -d --name TEST $CONTAINER_TEST_IMAGE 
-    - sleep 60
-    - docker exec TEST bash -c "echo 'PING' | nc 127.0.0.1 3310"
+    - docker exec TEST wget -O /tmp/eicar.com https://secure.eicar.org/eicar.com
+    - docker exec TEST clamdscan /tmp/eicar.com || code=$?; if [ $code -eq 1 ]; then echo "Successfull Detection"; else exit $code; fi
   variables:
     GIT_STRATEGY: none
 
