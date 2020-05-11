@@ -49,6 +49,7 @@ Executable EICAR:
           else
               echo "Container Healthy"
               break
+          fi
       done
     - docker exec TEST wget -O /tmp/eicar.com https://secure.eicar.org/eicar.com
     - docker exec TEST clamdscan /tmp/eicar.com || code=$?; if [ $code -eq 1 ]; then echo "Successfull Detection"; else exit $code; fi
