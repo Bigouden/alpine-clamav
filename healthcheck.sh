@@ -1,8 +1,8 @@
 #!/bin/sh
 
 if [ "$(echo PING | nc localhost 3310)" = "PONG" ]; then
-    echo "PING Successful"
+    echo "ClamAV Daemon OK"
 else
-    echo "PING Failed"
+    echo "ClamAV Daemon KO"
     exit 1
 fi
