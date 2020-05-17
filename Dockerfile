@@ -7,6 +7,7 @@ RUN apk add --update --no-cache \
       clamav \
       clamav-libunrar \
     && rm -rf \
+         /etc/clamav \
          /tmp/* \
          /root/.cache/* \
     && mkdir /var/run/clamav \
