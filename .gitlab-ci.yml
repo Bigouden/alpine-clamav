@@ -1,5 +1,5 @@
 include:
-  - project: 'gitlab-ci-templates'
+  - project: 'Bigouden/gitlab-ci-templates'
     file: '.gitlab-ci-docker.yml'
     
 stages:
