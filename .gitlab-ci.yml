@@ -5,6 +5,7 @@ include:
 stages:
   - Quality
   - Build
+  - Inspect
   - Test
   - Release
   
