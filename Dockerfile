@@ -10,6 +10,7 @@ RUN apk add --update --no-cache \
          /etc/clamav \
          /tmp/* \
          /root/.cache/* \
+         /var/cache/* \
     && mkdir /var/run/clamav \
     && touch /var/run/clamav/clamd.sock \
     && chown -R clamav:clamav /var/run/clamav \
