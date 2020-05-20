@@ -87,7 +87,7 @@ ZIP Virus:
     GIT_STRATEGY: none
     EICAR_URL: https://secure.eicar.org/eicar_com.zip
     
-Docker Hub:
+DockerHub:
   stage: Release
   before_script:
     - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASSWORD
@@ -99,4 +99,6 @@ Docker Hub:
     - docker push $DOCKER_HUB_LATEST_IMAGE
   variables:
     GIT_STRATEGY: none
+    DOCKER_HUB_VERSION_IMAGE: bigouden/alpine-clamav:$CI_COMMIT_REF_NAME
+    DOCKER_HUB_LATEST_IMAGE: bigouden/alpine-clamav:latest
   when: manual
