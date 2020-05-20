@@ -99,6 +99,6 @@ DockerHub:
     - docker push $DOCKER_HUB_LATEST_IMAGE
   variables:
     GIT_STRATEGY: none
-    DOCKER_HUB_VERSION_IMAGE: bigouden/alpine-clamav:$CI_COMMIT_REF_NAME
-    DOCKER_HUB_LATEST_IMAGE: bigouden/alpine-clamav:latest
+    DOCKER_HUB_VERSION_IMAGE: $DOCKER_HUB_USER/$CI_PROJECT_NAME:$CI_COMMIT_REF_NAME
+    DOCKER_HUB_LATEST_IMAGE: $DOCKER_HUB_USER/$CI_PROJECT_NAME:latest
   when: manual
