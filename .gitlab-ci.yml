@@ -86,19 +86,3 @@ ZIP Virus:
   variables:
     GIT_STRATEGY: none
     EICAR_URL: https://secure.eicar.org/eicar_com.zip
-    
-DockerHub:
-  stage: Release
-  before_script:
-    - docker login -u $DOCKER_HUB_USER -p $DOCKER_HUB_PASSWORD
-  script:
-    - docker pull $CONTAINER_TEST_IMAGE
-    - docker tag $CONTAINER_TEST_IMAGE $DOCKER_HUB_VERSION_IMAGE
-    - docker tag $CONTAINER_TEST_IMAGE $DOCKER_HUB_LATEST_IMAGE
-    - docker push $DOCKER_HUB_VERSION_IMAGE
-    - docker push $DOCKER_HUB_LATEST_IMAGE
-  variables:
-    GIT_STRATEGY: none
-    DOCKER_HUB_VERSION_IMAGE: $DOCKER_HUB_USER/$CI_PROJECT_NAME:$CI_COMMIT_REF_NAME
-    DOCKER_HUB_LATEST_IMAGE: $DOCKER_HUB_USER/$CI_PROJECT_NAME:latest
-  when: manual
