@@ -1,4 +1,4 @@
-FROM alpine:edge
+FROM alpine:3.12
 LABEL maintainer="Thomas GUIRRIEC <thomas@guirriec.fr>"
 COPY entrypoint.sh /
 COPY healthcheck.sh /
