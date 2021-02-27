@@ -39,8 +39,6 @@ TXT Virus:
 ZIP Virus:
   stage: Test
   extends: .standalone
-  before_script:
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
     - wget -O /tmp/eicar $EICAR_ZIP_URL
     - clamdscan /tmp/eicar || code=$?; if [ $code -eq 1 ]; then echo "Detection OK"; else exit $code; fi
