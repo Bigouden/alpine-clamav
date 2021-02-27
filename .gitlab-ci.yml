@@ -1,7 +1,21 @@
 include:
   - project: 'Bigouden/gitlab-ci-templates'
     file: '.gitlab-ci-docker.yml'
-    
+
+variables:
+  EICAR_EXE_URL: https://secure.eicar.org/eicar.com
+  EICAR_TXT_URL: https://secure.eicar.org/eicar.com.txt
+  EICAR_ZIP_URL: https://secure.eicar.org/eicar_com.zip
+  FF_NETWORK_PER_BUILD: "true"
+
+.standalone:
+  image:
+    name: $CONTAINER_TEST_IMAGE
+    entrypoint: [""]
+  dependencies: []
+  variables:
+    GIT_STRATEGY: none
+
 stages:
   - Quality
   - Build
@@ -11,78 +25,22 @@ stages:
   
 EXE Virus:
   stage: Test
-  before_script:
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  extends: .standalone
   script:
-    - docker pull $CONTAINER_TEST_IMAGE
-    - docker run -d --name TEST $CONTAINER_TEST_IMAGE 
-    - |
-      for i in `seq 60`
-      do
-          HEALTH=$(docker inspect -f "{{.State.Health.Status}}" TEST)
-          if [ ${HEALTH} != "healthy" ]
-          then
-              echo "Container Unhealthy"
-              sleep 5
-          else
-              echo "Container Healthy"
-              break
-          fi
-      done
-    - docker exec TEST wget -O /tmp/eicar $EICAR_URL
-    - docker exec TEST clamdscan /tmp/eicar || code=$?; if [ $code -eq 1 ]; then echo "Detection OK"; else exit $code; fi
-  variables:
-    GIT_STRATEGY: none
-    EICAR_URL: https://secure.eicar.org/eicar.com
+    - wget -O /tmp/eicar $EICAR_EXE_URL
+    - clamdscan /tmp/eicar || code=$?; if [ $code -eq 1 ]; then echo "Detection OK"; else exit $code; fi
 
 TXT Virus:
   stage: Test
-  before_script:
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  extends: .standalone
   script:
-    - docker pull $CONTAINER_TEST_IMAGE
-    - docker run -d --name TEST $CONTAINER_TEST_IMAGE 
-    - |
-      for i in `seq 60`
-      do
-          HEALTH=$(docker inspect -f "{{.State.Health.Status}}" TEST)
-          if [ ${HEALTH} != "healthy" ]
-          then
-              echo "Container Unhealthy"
-              sleep 5
-          else
-              echo "Container Healthy"
-              break
-          fi
-      done
-    - docker exec TEST wget -O /tmp/eicar $EICAR_URL
-    - docker exec TEST clamdscan /tmp/eicar || code=$?; if [ $code -eq 1 ]; then echo "Detection OK"; else exit $code; fi
-  variables:
-    GIT_STRATEGY: none
-    EICAR_URL: https://secure.eicar.org/eicar.com.txt
+    - wget -O /tmp/eicar $EICAR_TXT_URL
+    - clamdscan /tmp/eicar || code=$?; if [ $code -eq 1 ]; then echo "Detection OK"; else exit $code; fi
 
 ZIP Virus:
   stage: Test
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
-    - docker pull $CONTAINER_TEST_IMAGE
-    - docker run -d --name TEST $CONTAINER_TEST_IMAGE 
-    - |
-      for i in `seq 60`
-      do
-          HEALTH=$(docker inspect -f "{{.State.Health.Status}}" TEST)
-          if [ ${HEALTH} != "healthy" ]
-          then
-              echo "Container Unhealthy"
-              sleep 5
-          else
-              echo "Container Healthy"
-              break
-          fi
-      done
-    - docker exec TEST wget -O /tmp/eicar $EICAR_URL
-    - docker exec TEST clamdscan /tmp/eicar || code=$?; if [ $code -eq 1 ]; then echo "Detection OK"; else exit $code; fi
-  variables:
-    GIT_STRATEGY: none
-    EICAR_URL: https://secure.eicar.org/eicar_com.zip
+    - wget -O /tmp/eicar $EICAR_ZIP_URL
+    - clamdscan /tmp/eicar || code=$?; if [ $code -eq 1 ]; then echo "Detection OK"; else exit $code; fi
