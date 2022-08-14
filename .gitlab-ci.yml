@@ -21,6 +21,7 @@ stages:
   - Test
   - Inspect
   - Release
+  - Clean
   
 EXE Virus:
   stage: Test
