@@ -1,11 +1,8 @@
 FROM alpine:3.16
 LABEL maintainer="Thomas GUIRRIEC <thomas@guirriec.fr>"
-COPY entrypoint.sh /
-COPY healthcheck.sh /
-RUN apk add --update --no-cache \
-      bash \
-      clamav \
-      clamav-libunrar \
+ENV USERNAME='clamav'
+COPY apk_packages /
+RUN xargs -a /apk_packages apk add --no-cache --update \
     && rm -rf \
          /etc/clamav \
          /tmp/* \
@@ -13,15 +10,13 @@ RUN apk add --update --no-cache \
          /var/cache/* \
     && mkdir /var/run/clamav \
     && touch /var/run/clamav/clamd.sock \
-    && chown -R clamav:clamav /var/run/clamav \
-    && chown clamav:clamav /entrypoint.sh \
-    && chown clamav:clamav /healthcheck.sh \
-    && chmod +x /entrypoint.sh \
-    && chmod +x /healthcheck.sh
-COPY clamav /etc/clamav
+    && chown -R ${USERNAME}:${USERNAME} /var/run/clamav
+COPY --chown=${USERNAME}:${USERNAME} clamav /etc/clamav
+COPY --chown=${USERNAME}:${USERNAME} --chmod=500 entrypoint.sh /
+COPY --chown=${USERNAME}:${USERNAME} --chmod=500 healthcheck.sh /
+USER clamav
 WORKDIR /etc/clamav/
 EXPOSE 3310/tcp
-USER clamav
 HEALTHCHECK CMD /healthcheck.sh
 VOLUME ["/var/lib/clamav"]
 ENTRYPOINT ["/entrypoint.sh"]
