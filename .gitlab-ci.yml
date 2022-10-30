@@ -17,6 +17,7 @@ variables:
 
 stages:
   - Quality
+  - Security
   - Build
   - Test
   - Inspect
