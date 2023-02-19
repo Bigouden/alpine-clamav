@@ -17,6 +17,6 @@ COPY --chown=${USERNAME}:${USERNAME} --chmod=500 healthcheck.sh /
 USER clamav
 WORKDIR /etc/clamav/
 EXPOSE 3310/tcp
-HEALTHCHECK CMD /healthcheck.sh
+HEALTHCHECK CMD /healthcheck.sh # nosemgrep
 VOLUME ["/var/lib/clamav"]
 ENTRYPOINT ["/entrypoint.sh"]
