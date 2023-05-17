@@ -1,6 +1,7 @@
+---
 include:
-  - project: 'Bigouden/gitlab-ci-templates'
-    file: '.gitlab-ci-docker.yml'
+  - project: "Bigouden/gitlab-ci-templates"
+    file: ".gitlab-ci-docker.yml"
 
 variables:
   EICAR_EXE_URL: https://secure.eicar.org/eicar.com
@@ -23,7 +24,7 @@ stages:
   - Inspect
   - Release
   - Clean
-  
+
 EXE Virus:
   stage: Test
   extends: .standalone
