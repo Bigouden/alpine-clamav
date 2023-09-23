@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if [ "$(echo PING | nc localhost 3310)" = "PONG" ]; then
+if [ "$(echo PING | nc localhost 3310)" = "PONG" ]; then # DevSkim: ignore DS162092
 	echo "ClamAV Daemon OK"
 else
 	echo "ClamAV Daemon KO"

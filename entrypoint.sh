@@ -31,7 +31,7 @@ if [ "${1}" = "sh" ]; then
 	# Start CLAMAV (Background)
 	/usr/sbin/clamd &
 	# Wait For Working CLAMAV
-	while [ ! "$(echo PING | nc localhost 3310)" = "PONG" ]; do
+	while [ ! "$(echo PING | nc localhost 3310)" = "PONG" ]; do # DevSkim: ignore DS162092
 		sleep 0.5
 	done
 	# Launch Shell
