@@ -3,7 +3,7 @@
 ARG ALPINE_VERSION="3.19"
 
 FROM alpine:${ALPINE_VERSION} AS builder
-COPY apk_packages /tmp
+COPY --link apk_packages /tmp
 # hadolint ignore=DL3018
 RUN --mount=type=cache,id=builder_apk_cache,target=/var/cache/apk \
     apk add gettext-envsubst
@@ -11,7 +11,7 @@ RUN --mount=type=cache,id=builder_apk_cache,target=/var/cache/apk \
 FROM alpine:${ALPINE_VERSION}
 LABEL maintainer="Thomas GUIRRIEC <thomas@guirriec.fr>"
 ENV USERNAME="clamav"
-# hadolint ignore=DL3018
+# hadolint ignore=DL3018,SC2006
 RUN --mount=type=bind,from=builder,source=/usr/bin/envsubst,target=/usr/bin/envsubst \
     --mount=type=bind,from=builder,source=/usr/lib/libintl.so.8,target=/usr/lib/libintl.so.8 \
     --mount=type=bind,from=builder,source=/tmp,target=/tmp \
@@ -22,8 +22,8 @@ RUN --mount=type=bind,from=builder,source=/usr/bin/envsubst,target=/usr/bin/envs
     && mkdir /var/run/clamav \
     && touch /var/run/clamav/clamd.sock \
     && chown -R "${USERNAME}":"${USERNAME}" /var/run/clamav
-COPY --chown=${USERNAME}:${USERNAME} clamav /etc/clamav
-COPY --chmod=755 entrypoint.sh healthcheck.sh /
+COPY --link --chown=${USERNAME}:${USERNAME} clamav /etc/clamav
+COPY --link --chmod=755 entrypoint.sh healthcheck.sh /
 USER clamav
 WORKDIR /etc/clamav/
 EXPOSE 3310/tcp
