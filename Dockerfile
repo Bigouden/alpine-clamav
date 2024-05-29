@@ -22,7 +22,7 @@ RUN --mount=type=bind,from=builder,source=/usr/bin/envsubst,target=/usr/bin/envs
     && mkdir /var/run/clamav \
     && touch /var/run/clamav/clamd.sock \
     && chown -R "${USERNAME}":"${USERNAME}" /var/run/clamav
-COPY --link --chown=${USERNAME}:${USERNAME} clamav /etc/clamav
+COPY --link --chmod=755 clamav /etc/clamav
 COPY --link --chmod=755 entrypoint.sh healthcheck.sh /
 USER clamav
 WORKDIR /etc/clamav/
